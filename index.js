@@ -57,16 +57,17 @@ app.put("/api/shipping/cancel", async (req, res) => {
 });
 
 app.get("/api/shipping/get", async (req, res) => {
+    const userId = req.query.userId;
+    if (userId) {
+        const spec = await prisma.shipping.findMany({
+            where: { userId: Number(userId) },
+        });
+        console.log(spec);
+        return res.status(200).json(spec);
+    }
     const all = await prisma.shipping.findMany();
-
     return res.status(200).json(all);
 });
-
-// app.get("/api/shipping/get?userId=101", async (req, res) => {
-//   const all = await prisma.shipping.findMany();
-
-//   return res.status(200).json(all);
-// });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
